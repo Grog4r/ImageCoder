@@ -22,7 +22,7 @@ public class Decoder {
 		BufferedImage image = ImageIO.read(inFile);
 		width = image.getWidth();
 		height = image.getHeight();
-		int len = 0;
+		int len;
 		int cP = image.getRGB(0, 0);
 
 		int red = (cP & 0x00ff0000) >> 16;
@@ -59,7 +59,7 @@ public class Decoder {
 
 		// System.out.println(len);
 
-		String outMsg = "";
+		StringBuilder outMsg = new StringBuilder();
 
 		int pixelCtr = 2;
 		for (int i = 0; i < len; i++) {
@@ -80,17 +80,15 @@ public class Decoder {
 			c ^= gPrt << 3;
 			c ^= bPrt;
 
-			char msgChar = 0;
+			char msgChar;
 			msgChar = (char) c;
-			// System.out.println(msgChar);
-			// System.out.println(i);
 			pixelCtr++;
-			outMsg += msgChar;
+			outMsg.append(msgChar);
 		}
 		Frame.prog.setText("Erfolgreich Decodiert...");
-		return outMsg;
+		return outMsg.toString();
 	}
-	
-	
+
+
 
 }

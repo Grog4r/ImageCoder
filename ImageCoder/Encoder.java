@@ -60,15 +60,7 @@ public class Encoder {
 			blue = (cP & 0x000000ff);
 
 			lenPrt = len & 0xff;
-			charModRed = (lenPrt & 0b111000000) >> 6;
-			redNew = mod2Bits(red, charModRed);
-			charModGreen = (lenPrt & 0b000111000) >> 3;
-			greenNew = mod2Bits(green, charModGreen);
-			charModBlue = (lenPrt & 0b000000111);
-			blueNew = mod2Bits(blue, charModBlue);
-
-			color = new Color(redNew, greenNew, blueNew);
-			g.setColor(color);
+			colorModification(g, red, green, blue, lenPrt);
 			g.drawLine(1, 0, 1, 0);
 
 			int pixelCtr = 2;
@@ -84,19 +76,9 @@ public class Encoder {
 				red = (cCurrent & 0x00ff0000) >> 16;
 				green = (cCurrent & 0x0000ff00) >> 8;
 				blue = (cCurrent & 0x000000ff);
-				
 
-				charModRed = (c & 0b111000000) >> 6;
-				redNew = mod2Bits(red, charModRed);
-				charModGreen = (c & 0b000111000) >> 3;
-				greenNew = mod2Bits(green, charModGreen);
-				charModBlue = (c & 0b000000111);
-				blueNew = mod2Bits(blue, charModBlue);
 
-				
-
-				color = new Color(redNew, greenNew, blueNew);
-				g.setColor(color);
+				colorModification(g, red, green, blue, c);
 				g.drawLine(x, y, x, y);
 				pixelCtr++;
 			}
@@ -114,17 +96,31 @@ public class Encoder {
 		}
 	}
 
+	private void colorModification(Graphics2D g, int red, int green, int blue, int lenPrt) {
+		int charModRed;
+		int redNew;
+		int charModGreen;
+		int greenNew;
+		int charModBlue;
+		int blueNew;
+		Color color;
+		charModRed = (lenPrt & 0b111000000) >> 6;
+		redNew = mod2Bits(red, charModRed);
+		charModGreen = (lenPrt & 0b000111000) >> 3;
+		greenNew = mod2Bits(green, charModGreen);
+		charModBlue = (lenPrt & 0b000000111);
+		blueNew = mod2Bits(blue, charModBlue);
+
+		color = new Color(redNew, greenNew, blueNew);
+		g.setColor(color);
+	}
+
 	public double getMaxChar() {
-		double ret = width * height - 3;
-		return ret;
+		return width * height - 3;
 	}
 
 	public boolean validMsg(String msg) {
-		if (msg.length() > this.getMaxChar()) {
-			return false;
-		} else {
-			return true;
-		}
+		return !(msg.length() > this.getMaxChar());
 	}
 
 	public int mod2Bits(int value, int suffix) {

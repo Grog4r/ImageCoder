@@ -16,24 +16,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author kuni1021@h-ka.de
  */
 
-@SuppressWarnings("serial")
 public class Frame extends JFrame {
-	// Anfang Attribute
-	private JLabel labelEncoderDecoder = new JLabel();
-	private JTextArea textArea = new JTextArea("");
-	private JScrollPane textAreaScrollPane = new JScrollPane(textArea);
-	private JLabel outLabel = new JLabel();
-	private JTextField outName = new JTextField();
-	private JLabel png = new JLabel();
+	private final JTextArea textArea = new JTextArea("");
+	private final JTextField outName = new JTextField();
 	String userhome = System.getProperty("user.home");
-	private JFileChooser fileChooser = new JFileChooser(userhome + System.getProperty("file.separator") + "Desktop");
-	private JButton decode = new JButton();
-	private JButton encode = new JButton();
-	private JButton help = new JButton();
+	private final JFileChooser fileChooser = new JFileChooser(userhome + System.getProperty("file.separator") + "Desktop");
 	protected static JTextArea prog = new JTextArea();
 	// Ende Attribute
 	
-	private String text;
+	private final String text;
 
 	public Frame() {
 		// Frame-Initialisierung
@@ -52,6 +43,8 @@ public class Frame extends JFrame {
 		cp.setLayout(null);
 		// Anfang Komponenten
 
+		// Anfang Attribute
+		JLabel labelEncoderDecoder = new JLabel();
 		labelEncoderDecoder.setBounds(200, 15, 200, 30);
 		labelEncoderDecoder.setText("Encoder/Decoder");
 		labelEncoderDecoder.setOpaque(false);
@@ -59,14 +52,16 @@ public class Frame extends JFrame {
 		labelEncoderDecoder.setFont(new Font("Consolas", Font.BOLD, 22));
 		cp.add(labelEncoderDecoder);
 
+		JScrollPane textAreaScrollPane = new JScrollPane(textArea);
 		textAreaScrollPane.setBounds(30, 55, 540, 200);
-		text = "Zu codierenden Text hier eingeben.\n"
-				+ "Dann Bild Auswählen, Name für Ausgabe-Datei wählen und auf Encode drücken.\n"
-				+ "Oder zu entschlüsselndes Bild auswählen und auf Decode drücken.";
+		text = "Zu codierenden Text hier eingeben. \n" +
+				"Dann Bild auswählen, Name für Ausgabe-Datei wählen und auf Encode drücken. \n" +
+				"Oder zu entschlüsselndes Bild auswählen und auf Decode drücken.";
 		textArea.setText(text);
 		textArea.setWrapStyleWord(true);
 		cp.add(textAreaScrollPane);
-		
+
+		JLabel outLabel = new JLabel();
 		outLabel.setBounds(30, 270, 160, 20);
 		outLabel.setText("Dateiname Ausgabe-Datei:");
 		cp.add(outLabel);
@@ -74,7 +69,8 @@ public class Frame extends JFrame {
 		outName.setBounds(200, 270, 200, 20);
 		outName.setText("output");
 		cp.add(outName);
-		
+
+		JLabel png = new JLabel();
 		png.setBounds(405, 270, 100, 20);
 		png.setText(".png");
 		cp.add(png);
@@ -87,34 +83,25 @@ public class Frame extends JFrame {
 		fileChooser.setControlButtonsAreShown(false);
 		cp.add(fileChooser);
 
+		JButton encode = new JButton();
 		encode.setBounds(455, 320, 115, 25);
 		encode.setText("Encode");
 		encode.setMargin(new Insets(2, 2, 2, 2));
-		encode.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				encode_ActionPerformed(evt);
-			}
-		});
+		encode.addActionListener(this::encode_ActionPerformed);
 		cp.add(encode);
 
+		JButton decode = new JButton();
 		decode.setBounds(455, 370, 115, 25);
 		decode.setText("Decode");
 		decode.setMargin(new Insets(2, 2, 2, 2));
-		decode.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				decode_ActionPerformed(evt);
-			}
-		});
+		decode.addActionListener(this::decode_ActionPerformed);
 		cp.add(decode);
-		
+
+		JButton help = new JButton();
 		help.setBounds(455, 420, 115, 25);
 		help.setText("Hilfe");
 		help.setMargin(new Insets(2, 2, 2, 2));
-		help.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				help_ActionPerformed(evt);
-			}
-		});
+		help.addActionListener(this::help_ActionPerformed);
 		cp.add(help);
 		
 		prog.setBounds(30, 570, 540, 60);
@@ -152,19 +139,19 @@ public class Frame extends JFrame {
 			File outputFile = new File(outFile);
 			Encoder e = new Encoder(message, inputFile, outputFile);
 			e.encode();
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 			
 		}
 	} // end of encode_ActionPerformed
 
 	public void decode_ActionPerformed(ActionEvent evt) {
-		String decMsg = "";
+		String decMsg;
 		File inputFile = fileChooser.getSelectedFile();
 		try {
 			Decoder d = new Decoder(inputFile);
 			decMsg = d.decode();
 			textArea.setText(decMsg);
-		} catch(Exception e) {
+		} catch(Exception ignored) {
 			
 		}
 	} // end of bDecode_ActionPerformed
